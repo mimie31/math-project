@@ -1,15 +1,74 @@
-innerText = text;
+</div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-400">Velocity f'(x):</span><span id="hudVelocity" class="font-bold text-emerald-600">-</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:col-span-2 bg-white p-4 rounded-xl border border-emerald-100 shadow-sm bg-gradient-to-br from-white to-emerald-50/20">
+                    <h3 class="text-xs font-bold text-emerald-700">💡 AGROTECH INSIGHT & ACTION (LAYMAN'S TERMS)</h3>
+                    <p id="laymanInsight" class="text-xs text-slate-600 mt-2 italic">Loading...</p>
+                </div>
+            </div>
+        </div>
+    </main>
 
-            // Highlight point on chart via standard line drawing update
-            oilPalmChart.update();
-        }
+    <script>
+        const slider = document.getElementById('weekSlider');
+        const weekDisplay = document.getElementById('weekDisplay');
+        const hudHeight = document.getElementById('hudHeight');
+        const hudVelocity = document.getElementById('hudVelocity');
+        const laymanInsight = document.getElementById('laymanInsight');
 
-        // Listener for slider movement
-        slider.addEventListener('input', (e) => {
-            updateDashboard(e.target.value);
+        const L = 150, k = 0.2, x0 = 20;
+        const labels = Array.from({length: 51}, (_, i) => i);
+        const heightData = labels.map(x => (L / (1 + Math.exp(-k * (x - x0)))).toFixed(1));
+        const velocityData = labels.map(x => {
+            const expTerm = Math.exp(-k * (x - x0));
+            return ((L * k * expTerm) / Math.pow(1 + expTerm, 2)).toFixed(2);
         });
 
-        // Trigger initial calculation load
+        const ctx = document.getElementById('oilPalmChart').getContext('2d');
+        const oilPalmChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: 'Seedling Height (cm)', data: heightData, borderColor: '#059669', backgroundColor: 'rgba(5, 150, 105, 0.05)', borderWidth: 2, fill: true, yAxisID: 'y' },
+                    { label: 'Growth Velocity (cm/w)', data: velocityData, borderColor: '#10b981', borderDash: [5, 5], borderWidth: 1.5, fill: false, yAxisID: 'y1' }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { type: 'linear', position: 'left', ticks: { color: '#475569' } },
+                    y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#10b981' } }
+                }
+            }
+        });
+
+        function updateDashboard(week) {
+            const w = parseInt(week);
+            weekDisplay.innerText = Week ${w};
+            hudHeight.innerText = ${heightData[w]} cm;
+            hudVelocity.innerText = ${velocityData[w]} cm/wk;
+
+            let text = "";
+            if (w < 12) {
+                text = At week ${w}, the seedling is in the early lag phase (${heightData[w]} cm). Growth speed derivative is low (${velocityData[w]} cm/week). Focus is on root establishment.;
+            } else if (w >= 12 && w <= 25) {
+                if (w == 20) {
+                    text = 🚨 Week 20 is the inflection point! The growth velocity peaks exactly at f'(20) = ${velocityData[w]} cm/week. Best time for maximum NPK fertilizer application!;
+                } else {
+                    text = At week ${w}, the seedling is in the vegetative surge phase. Derivative is increasing rapidly at ${velocityData[w]} cm/week. High nutrient absorption.;
+                }
+            } else {
+                text = At week ${w}, height stabilizes near ${heightData[w]} cm (maturity plateau). Derivative drops to ${velocityData[w]} cm/week. Ready for field transplanting!;
+            }
+            laymanInsight.innerText = text;
+        }
+
+        slider.addEventListener('input', (e) => updateDashboard(e.target.value));
         updateDashboard(20);
     </script>
 </body>
