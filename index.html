@@ -1,125 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bioscience Derivatives: Oil Palm Growth</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h1 { color: #2e7d32; border-bottom: 2px solid #2e7d32; padding-bottom: 10px; }
-        .formula-box { background: #e8f5e9; border-left: 5px solid #2e7d32; padding: 15px; margin: 20px 0; font-family: 'Courier New', Courier, monospace; }
-        .explanation { line-height: 1.6; font-size: 1.1em; }
-        canvas { margin-top: 20px; cursor: crosshair; }
-        #resultDisplay { margin-top: 20px; padding: 15px; border-radius: 8px; background: #fff3e0; display: none; border: 1px solid #ffb74d; }
-        .badge { background: #2e7d32; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; }
-    </style>
-</head>
-<body>
+innerText = text;
 
-<div class="container">
-    <h1>🌱 Bio-Calculus: Oil Palm Seedling Velocity</h1>
-    <p class="badge">Program Context: SFA / SFM / SFP</p>
-    
-    <div class="explanation">
-        <p>In Malaysia, the growth of <i>Elaeis guineensis</i> (Oil Palm) seedlings follows a sigmoidal pattern. As a bioscience expert, we model the height $H$ over time $t$ (weeks) using the logistic function. To optimize nursery management, we calculate the <b>derivative</b> to find the growth rate.</p>
-    </div>
-
-    <div class="formula-box">
-        <strong>Growth Function:</strong><br>
-        $$f(x) = \frac{L}{1 + e^{-k(x - x_0)}}$$ 
-        <br><i>Where L=150cm (max height), k=0.2 (growth rate constant), x₀=20 (mid-point).</i>
-        <hr>
-        <strong>The Derivative (Instantaneous Growth Rate):</strong><br>
-        $$f'(x) = \frac{L \cdot k \cdot e^{-k(x - x_0)}}{(1 + e^{-k(x - x_0)})^2}$$
-    </div>
-
-    <canvas id="growthChart" width="800" height="400"></canvas>
-
-    <div id="resultDisplay">
-        <strong>Analysis at Week <span id="weekVal"></span>:</strong><br>
-        Current Height: <span id="heightVal"></span> cm<br>
-        Growth Rate $f'(x)$: <b><span id="rateVal"></span> cm/week</b><br>
-        <p id="laymanExplain" style="font-style: italic; color: #555;"></p>
-    </div>
-
-    <p style="font-size: 0.8em; color: #777; margin-top: 30px;">
-        Data Source: Realistic growth parameters adapted from <i>MPOB (Malaysian Palm Oil Board) Nursery Guidelines</i> and <i>UniSZA Journal of Agrobiotechnology (2022)</i>.
-    </p>
-</div>
-
-<script type="text/javascript" async
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
-
-<script>
-    const L = 150;  // Carrying capacity
-    const k = 0.2;  // Logistic growth rate
-    const x0 = 25;  // Inflection point (week 25)
-
-    // Function f(x)
-    function f(x) {
-        return L / (1 + Math.exp(-k * (x - x0)));
-    }
-
-    // Derivative f'(x)
-    function fPrime(x) {
-        const expTerm = Math.exp(-k * (x - x0));
-        return (L * k * expTerm) / Math.pow(1 + expTerm, 2);
-    }
-
-    const labels = Array.from({length: 51}, (_, i) => i);
-    const growthData = labels.map(x => f(x));
-
-    const ctx = document.getElementById('growthChart').getContext('2d');
-    const chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Seedling Height (cm)',
-                data: growthData,
-                borderColor: '#2e7d32',
-                backgroundColor: 'rgba(46, 125, 50, 0.1)',
-                fill: true,
-                tension: 0.4
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                tooltip: { enabled: false },
-                legend: { position: 'top' }
-            },
-            scales: {
-                x: { title: { display: true, text: 'Weeks After Planting' } },
-                y: { title: { display: true, text: 'Height (cm)' }, min: 0, max: 160 }
-            },
-            onClick: (e) => {
-                const points = chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
-                if (points.length) {
-                    const index = points[0].index;
-                    const week = labels[index];
-                    const height = growthData[index].toFixed(2);
-                    const rate = fPrime(week).toFixed(2);
-
-                    document.getElementById('weekVal').innerText = week;
-                    document.getElementById('heightVal').innerText = height;
-                    document.getElementById('rateVal').innerText = rate;
-                    
-                    let explanation = "";
-                    if (rate > 7) explanation = "The seedling is in its 'Peak Growth Phase'. Fertilizer uptake is at its highest right now!";
-                    else if (week < x0) explanation = "Growth is accelerating. The plant is building its root system and structural integrity.";
-                    else explanation = "Growth is slowing down (maturation). The plant is approaching a stable height for field transplanting.";
-
-                    document.getElementById('laymanExplain').innerText = "In simple terms: " + explanation;
-                    document.getElementById('resultDisplay').style.display = 'block';
-                }
-            }
+            // Highlight point on chart via standard line drawing update
+            oilPalmChart.update();
         }
-    });
-</script>
 
+        // Listener for slider movement
+        slider.addEventListener('input', (e) => {
+            updateDashboard(e.target.value);
+        });
+
+        // Trigger initial calculation load
+        updateDashboard(20);
+    </script>
 </body>
 </html>
