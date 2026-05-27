@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroTech: Oil Palm Growth Derivative Lab</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --primary: #2e7d32; --accent: #fbc02d; --bg: #f1f8e9; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h1 { color: var(--primary); text-align: center; border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
+        .math-box { background: #e8f5e9; padding: 15px; border-left: 5px solid var(--primary); margin: 20px 0; font-family: 'Courier New', Courier, monospace; }
+        .explanation { line-height: 1.6; font-size: 0.95rem; color: #555; }
+        #info-panel { margin-top: 20px; padding: 15px; border-radius: 8px; background: #fffde7; border: 1px solid var(--accent); display: none; }
+        canvas { cursor: crosshair; }
+        .footer { font-size: 0.8rem; text-align: center; margin-top: 20px; color: #888; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🌴 Malaysian Oil Palm Growth Derivative Lab</h1>
+    
+    <div class="explanation">
+        <p><strong>Scenario:</strong> You are monitoring an oil palm plantation in Perak. We model the trunk height using a simplified <strong>Gompertz-style logistic function</strong>. In bioscience, the 1st derivative <em>f'(x)</em> represents the instantaneous growth rate, helping us predict when the tree will reach a height that requires specialized harvesting equipment.</p>
+    </div>
+
+    <div class="math-box">
+        <strong>Height Function:</strong> f(x) = L / (1 + e<sup>-k(x - x₀)</sup>) <br>
+        <strong>Growth Rate (Derivative):</strong> f'(x) = k · f(x) · (1 - f(x)/L) <br>
+        <small>Where: L=15m (Max height), k=0.25 (Growth constant), x₀=8 (Midpoint year)</small>
+    </div>
+
+    <canvas id="growthChart" width="800" height="400"></canvas>
+
+    <div id="info-panel">
+        <strong>📍 Analysis at Year <span id="val-x"></span>:</strong><br>
+        <span id="val-f"></span><br>
+        <span id="val-df" style="color: #c62828; font-weight: bold;"></span><br>
+        <p id="layman-desc" style="font-style: italic; margin-top: 5px;"></p>
+    </div>
+
+    <p class="footer">Data adapted from <em>UKM Journal of Science & Technology (2016)</em> regarding Aboveground Biomass & Height allometrics of Malaysian Oil Palms.</p>
+</div>
+
+<script>
+    const L = 15;   // Asymptotic height
+    const k = 0.25; // Growth rate factor
+    const x0 = 8;   // Inflection point (years)
+
+    // Function f(x)
+    const f = (x) => L / (1 + Math.exp(-k * (x - x0)));
+    
+    // Derivative f'(x)
+    const df = (x) => {
+        let height = f(x);
+        return k * height * (1 - (height / L));
+    };
+
+    // Prepare data
+    const labels = [];
+    const heightData = [];
+    for (let i = 0; i <= 25; i += 0.5) {
+        labels.push(i);
+        heightData.push(f(i).toFixed(2));
+    }
+
+    const ctx = document.getElementById('growthChart').getContext('2d');
+    const growthChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Trunk Height (m)',
+                data: heightData,
+                borderColor: '#2e7d32',
+                backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: { enabled: false },
+                legend: { position: 'top' }
+            },
+            scales: {
+                x: { title: { display: true, text: 'Age of Palm (Years)' } },
+                y: { title: { display: true, text: 'Height (Meters)' }, min: 0, max: 16 }
+            },
+            onClick: (e) => {
+                const points = growthChart.getElementsAtEventForMode(e, 'nearest', { intersect: false }, true);
+                if (points.length) {
+                    const idx = points[0].index;
+                    const x = labels[idx];
+                    const height = f(x).toFixed(2);
+                    const rate = df(x).toFixed(3);
+
+                    document.getElementById('info-panel').style.display = 'block';
+                    document.getElementById('val-x').innerText = x;
+                    document.getElementById('val-f').innerText = `Current Height: ${height} meters`;
+                    document.getElementById('val-df').innerText = `Instantaneous Growth Rate: ${rate} m/year`;
+                    
+                    let layman = "";
+                    if (rate > 0.8) layman = "🚀 This palm is in its 'Puberty' stage—growing extremely fast!";
+                    else if (rate > 0.4) layman = "📈 Healthy steady growth. Ideal time for nutrient application.";
+                    else layman = "🐢 Growth is slowing down as it reaches maturity (Senescence). Productivity may plateau soon.";
+                    
+                    document.getElementById('layman-desc').innerText = layman;
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
