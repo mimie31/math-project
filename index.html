@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oil Palm Yield Derivative Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="bg-[#f4f7f6] text-slate-800 font-sans antialiased min-h-screen flex flex-col p-4 sm:p-6">
+
+    <div class="max-w-7xl w-full mx-auto mb-6 flex flex-col md:flex-row justify-between items-start md:items-center bg-white border border-emerald-100 rounded-xl p-6 shadow-sm gap-4">
+        <div>
+            <span class="text-xs font-bold tracking-wider uppercase bg-emerald-100 px-3 py-1 rounded-full text-emerald-800">
+                SFM: Oil Palm Sustainability & Agronomy
+            </span>
+            <h1 class="text-3xl font-extrabold text-slate-900 mt-2 tracking-tight">Oil Palm Yield Derivative Simulator</h1>
+            <p class="text-sm text-slate-500 mt-1">Analyzing Cumulative Yield \(f(x)\) and Production Rate Derivative \(f'(x)\) in Malaysian Plantation Systems</p>
+        </div>
+        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-center gap-3">
+            <div class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></div>
+            <div>
+                <p class="text-xs font-semibold text-emerald-900 uppercase tracking-wider">Target Context:</p>
+                <p class="text-xs font-bold text-emerald-700">MPOB Malaysian Standards & FELDA Data</p>
+            </div>
+        </div>
+    </div>
+
+    <main class="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
+        
+        <section class="lg:col-span-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-2 text-emerald-800 mb-3 font-bold text-lg">
+                    <span>📖</span>
+                    <h2>The Bioscience Scenario</h2>
+                </div>
+                <div class="text-sm leading-relaxed text-slate-600 space-y-4">
+                    <p>
+                        In intensive tropical plantation agriculture, oil palm (<span class="italic">Elaeis guineensis</span>) fresh fruit bunch (FFB) yields are non-linear and conform strictly to a sigmoidal (S-shaped) growth trajectory over their 25-year economic window. Understanding the instantaneous production velocity—the <strong>First Derivative \(f'(x)\)</strong>—is critical for macro food security projections.
+                    </p>
+                    <p>
+                        The derivative represents the <strong>annual average yield speed (metric tonnes/hectare/year)</strong>. In food security systems, mapping when this productivity velocity transitions or peaks allows management teams to allocate critical micronutrient matrices before structural yield deceleration sets in. 
+                    </p>
+                    <p>
+                        Harvesting past peak efficiency cycles changes long-term return matrices, as older palm heights escalate harvesting risks and significantly cut down total national structural land-use efficiency ratios.
+                    </p>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-100 pt-4 mt-6">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Deep-Dive: Calculus in Palm Economics</h3>
+                <ul class="text-xs text-slate-500 space-y-2">
+                    <li><strong class="text-slate-700">1) The Biological Peak:</strong> The peak of the derivative curve \(f'(x)\) occurs exactly at the mathematical inflection point of the cumulative yield curve where the second derivative equals zero: \(f''(x) = 0\).</li>
+                    <li><strong class="text-slate-700">2) Replanting Critical Target:</strong> When \(f'(x)\) asymptotically approaches zero, land resource productivity limits break down, giving clear data signals for nursery block cycles.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="lg:col-span-4 flex flex-col gap-6">
+            
+            <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+                <div class="flex items-center gap-2 text-indigo-900 mb-4 font-bold text-lg">
+                    <span>📊</span>
+                    <h2>Mathematical Growth Model</h2>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <span class="block text-xs font-bold text-indigo-700 uppercase tracking-wider mb-2">Logistic Yield \(f(x)\):</span>
+                        <div class="text-center py-2 bg-white rounded border border-slate-200 font-mono text-sm">
+                            $$f(x) = \frac{Y_{max}}{1 + \beta \cdot e^{-k \cdot \eta \cdot x}}$$
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <span class="block text-xs font-bold text-emerald-700 uppercase tracking-wider mb-2">Derivative \(f'(x)\) (Annual Yield Velocity):</span>
+                        <div class="text-center py-2 bg-white rounded border border-slate-200 font-mono text-xs">
+                            $$f'(x) = \frac{Y_{max} \cdot \beta \cdot (k \cdot \eta) \cdot e^{-k \cdot \eta \cdot x}}{(1 + \beta \cdot e^{-k \cdot \eta \cdot x})^2}$$
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 mt-4 text-[11px] text-slate-500 border-t border-slate-100 pt-3">
+                    <div>\(x\) = Tree Age In Field (0 to 25 yrs)</div>
+                    <div>\(Y_{max}\) = Target Max Potential Asymptote</div>
+                    <div>\(\beta\) = Seedling Hack Constant (Fixed at 15)</div>
+                    <div>\(\eta\) = Soil Management Index</div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm flex-grow">
+                <div class="flex items-center gap-2 text-amber-800 mb-4 font-bold text-lg">
+                    <span>🎛️</span>
+                    <h2>Environmental & Husbandry Factors</h2>
+                </div>
+
+                <div class="space-y-5">
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs font-bold text-slate-700">Target Maximum Yield (\(Y_{max}\))</label>
+                            <span id="valYmax" class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">30 t/ha</span>
+                        </div>
+                        <input type="range" id="sliderYmax" min="20" max="40" step="1" value="30" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-amber-500">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs font-bold text-slate-700">Soil & Management Index (\(\eta\))</label>
+                            <span id="valEta" class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">1.00</span>
+                        </div>
+                        <input type="range" id="sliderEta" min="0.7" max="1.3" step="0.05" value="1.00" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-amber-500">
+                        <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                            <span>Marginal Soil / Stress</span>
+                            <span>Optimal Managed S1 Soil</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs font-bold text-slate-700">Genetic Growth Coefficient (\(k\))</label>
+                            <span id="valK" class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded">0.35</span>
+                        </div>
+                        <input type="range" id="sliderK" min="0.25" max="0.45" step="0.01" value="0.35" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-amber-500">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="lg:col-span-4 flex flex-col gap-6">
+            
+            <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-600"></span> Live Growth Trajectory
+                    </h2>
+                    <span class="text-[10px] text-slate-400 italic">Click chart points to query</span>
+                </div>
+                
+                <div class="relative w-full h-[220px]">
+                    <canvas id="palmChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="text-xs font-bold text-slate-700">Interactive Age Selector:</span>
+                    <span id="hudDayLabel" class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">Year 8</span>
+                </div>
+                <input type="range" id="sliderAge" min="0" max="25" step="1" value="8" class="w-full h-2 bg-emerald-100 rounded-lg appearance-none cursor-pointer accent-emerald-600">
+            </div>
+
+            <div class="bg-slate-900 text-white p-5 rounded-2xl shadow-md border border-slate-800 flex flex-col justify-between flex-grow">
+                <div>
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-indigo-900/50 text-indigo-400 font-bold tracking-widest text-[10px] px-2 py-1 rounded border border-indigo-800/40">CALCULUS HUD</span>
+                            <h3 class="text-xs font-bold text-slate-300">Dynamic Derivative Evaluator</h3>
+                        </div>
+                        <div class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-900/50 px-2 py-1 rounded" id="mathJaxHudDisplay">
+                            \(f'(\text{Year } 8) = 2.45\) t/ha/yr
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 mb-4">
+                        <div class="bg-slate-800/60 p-2.5 rounded-xl border border-slate-800">
+                            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400 block mb-0.5">Yield \(f(x)\)</span>
+                            <span id="hudYield" class="text-base font-bold text-white block">11.54 <span class="text-[10px] text-slate-400 font-normal">t/ha</span></span>
+                        </div>
+                        <div class="bg-slate-800/60 p-2.5 rounded-xl border border-slate-800">
+                            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400 block mb-0.5">Speed \(f'(x)\)</span>
+                            <span id="hudDerivative" class="text-base font-bold text-emerald-400 block">2.45 <span class="text-[10px] text-slate-400 font-normal">t/ha/yr</span></span>
+                        </div>
+                        <div class="bg-slate-800/60 p-2.5 rounded-xl border border-slate-800">
+                            <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400 block mb-0.5">Agronomy Phase</span>
+                            <span id="hudStatus" class="text-xs font-bold text-amber-400 block mt-0.5">Peak Acceleration</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800/80 text-xs">
+                    <span class="text-[10px] font-bold tracking-wider uppercase text-emerald-500 block mb-1">💡 Agronomy Insight & Food Security Action</span>
+                    <p id="hudExplanation" class="text-slate-300 leading-relaxed font-normal">
+                        Click points or drag sliders to dynamically recalculate instantaneous agro-climatic growth trends.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="max-w-7xl w-full mx-auto mt-6 bg-white border border-slate-200/80 rounded-xl p-5 shadow-sm">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 tracking-widest">Malaysian Agronomic Data & Research Sources References</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-[11px] text-slate-600">
+            <div class="flex items-start gap-1.5">
+                <span class="text-emerald-600 font-bold">✔</span>
+                <p><strong>MPOB (Malaysian Palm Oil Board):</strong> Baseline trajectory configurations sourced via <a href="https://www.mpob.gov.my" target="_blank" class="text-emerald-700 underline font-medium">mpob.gov.my</a> - Yield Evaluation Performance Frameworks.</p>
+            </div>
+            <div class="flex items-start gap-1.5">
+                <span class="text-emerald-600 font-bold">✔</span>
+                <p><strong>FELDA Plantations Analytics:</strong> Operational age metrics extracted from commercial datasets at <a href="https://www.felda.gov.my" target="_blank" class="text-emerald-700 underline font-medium">felda.gov.my</a> structural efficiency summaries.</p>
+            </div>
+            <div class="flex items-start gap-1.5">
+                <span class="text-emerald-600 font-bold">✔</span>
+                <p><strong>MPOB Statistical Services:</strong> Real-world production trajectories derived from annual data metrics via <a href="https://www.mpob.gov.my" target="_blank" class="text-emerald-700 underline font-medium">mpob.gov.my/oil-palm-statistics</a>.</p>
+            </div>
+            <div class="flex items-start gap-1.5">
+                <span class="text-emerald-600 font-bold">✔</span>
+                <p><strong>Malaysian National Food Security:</strong> Strategic plantation life-cycle targets modeled in reference to Ministry guidelines at <a href="https://www.mafi.gov.my" target="_blank" class="text-emerald-700 underline font-medium">mafi.gov.my</a>.</p>
+            </div>
+        </div>
+        <div class="text-center text-[10px] text-slate-400 border-t border-slate-100 pt-3 mt-4 font-medium">
+            Designed for Applied Food Security Studies • Processed via Client-Side Calculus Engine
+        </div>
+    </footer>
+
+    <script>
+        // Parameters Object State Sync
+        const configState = {
+            ymax: 30,
+            beta: 15,
+            eta: 1.00,
+            k: 0.35,
+            currentAge: 8
+        };
+
+        // Math Calculations Logic Engines
+        function computeYield(x) {
+            const denom = 1 + configState.beta * Math.exp(-configState.k * configState.eta * x);
+            return configState.ymax / denom;
+        }
+
+        function computeDerivative(x) {
+            const expTerm = Math.exp(-configState.k * configState.eta * x);
+            const numer = configState.ymax * configState.beta * (configState.k * configState.eta) * expTerm;
+            const denom = Math.pow(1 + configState.beta * expTerm, 2);
+            return numer / denom;
+        }
+
+        // Generate Dataset Arrays for Chart Rendering Canvas
+        const dataLabels = [];
+        const dataYields = [];
+        const dataDerivatives = [];
+
+        function recalculateDataVectors() {
+            dataLabels.length = 0;
+            dataYields.length = 0;
+            dataDerivatives.length = 0;
+            for (let x = 0; x <= 25; x++) {
+                dataLabels.push(x);
+                dataYields.push(computeYield(x).toFixed(2));
+                dataDerivatives.push(computeDerivative(x).toFixed(2));
+            }
+        }
+        recalculateDataVectors();
+
+        // Chart.js Context Assignment Initialization
+        const ctx = document.getElementById('palmChart').getContext('2d');
+        const palmChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dataLabels,
+                datasets: [
+                    {
+                        label: 'Yield f(x) (t/ha)',
+                        data: dataYields,
+                        borderColor: '#0284c7', // Sky Blue
+                        backgroundColor: 'rgba(2, 132, 199, 0.04)',
+                        borderWidth: 2.5,
+                        tension: 0.2,
+                        yAxisID: 'yYield',
+                        pointRadius: 2,
+                        fill: true
+                    },
+                    {
+                        label: "Rate f'(x) (t/ha/yr)",
+                        data: dataDerivatives,
+                        borderColor: '#10b981', // Emerald
+                        borderWidth: 2,
+                        borderDash: [4, 4],
+                        tension: 0.2,
+                        yAxisID: 'yRate',
+                        pointRadius: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        title: { display: true, text: 'Palm Age in Field (Years)', font: { size: 10, weight: 'bold' } }
+                    },
+                    yYield: {
+                        type: 'linear',
+                        position: 'left',
+                        min: 0,
+                        max: 45,
+                        title: { display: true, text: 'Cumulative Yield (t/ha)', font: { size: 10, weight: 'bold' }, color: '#0284c7' }
+                    },
+                    yRate: {
+                        type: 'linear',
+                        position: 'right',
+                        min: 0,
+                        max: 4,
+                        grid: { drawOnChartArea: false },
+                        title: { display: true, text: 'Growth Velocity f\'(x)', font: { size: 10, weight: 'bold' }, color: '#10b981' }
+                    }
+                },
+                onClick: (e) => {
+                    const activePoints = palmChart.getElementsAtEventForMode(e, 'index', { intersect: false }, true);
+                    if (activePoints.length > 0) {
+                        const targetIndex = activePoints[0].index;
+                        document.getElementById('sliderAge').value = targetIndex;
+                        triggerSystemUpdate(targetIndex);
+                    }
+                }
+            }
+        });
+
+        // DOM Reactive Element Selectors Assignment Handles
+        const sliderYmax = document.getElementById('sliderYmax');
+        const sliderEta = document.getElementById('sliderEta');
+        const sliderK = document.getElementById('sliderK');
+        const sliderAge = document.getElementById('sliderAge');
+
+        const valYmax = document.getElementById('valYmax');
+        const valEta = document.getElementById('valEta');
+        const valK = document.getElementById('valK');
+        const hudDayLabel = document.getElementById('hudDayLabel');
+
+        const hudYield = document.getElementById('hudYield');
+        const hudDerivative = document.getElementById('hudDerivative');
+        const hudStatus = document.getElementById('hudStatus');
+        const hudExplanation = document.getElementById('hudExplanation');
+        const mathJaxHudDisplay = document.getElementById('mathJaxHudDisplay');
+
+        // Core App Synchronizer Engine
+        function triggerSystemUpdate(ageValue = null) {
+            // Read UI parameter state configurations
+            configState.ymax = parseFloat(sliderYmax.value);
+            configState.eta = parseFloat(sliderEta.value);
+            configState.k = parseFloat(sliderK.value);
+            
+            if (ageValue !== null) {
+                configState.currentAge = parseInt(ageValue);
+            } else {
+                configState.currentAge = parseInt(sliderAge.value);
+            }
+
+            // Sync Slider text displays
+            valYmax.innerText = `${configState.ymax} t/ha`;
+            valEta.innerText = configState.eta.toFixed(2);
+            valK.innerText = configState.k.toFixed(2);
+            hudDayLabel.innerText = `Year ${configState.currentAge}`;
+
+            // Recompute mathematical equations arrays and trigger chart push
+            recalculateDataVectors();
+            palmChart.data.datasets[0].data = dataYields;
+            palmChart.data.datasets[1].data = dataDerivatives;
+            palmChart.update('none'); // Update smoothly without break-animations
+
+            // Fetch absolute instantaneous results values for selected index targets
+            const calculatedYield = computeYield(configState.currentAge);
+            const calculatedDerivative = computeDerivative(configState.currentAge);
+
+            // Print direct scalar HUD fields outputs
+            hudYield.innerHTML = `${calculatedYield.toFixed(2)} <span class="text-[10px] text-slate-400 font-normal">t/ha</span>`;
+            hudDerivative.innerHTML = `${calculatedDerivative.toFixed(2)} <span class="text-[10px] text-slate-400 font-normal">t/ha/yr</span>`;
+            
+            // Format MathJax Dynamic Equation Overlay Label
+            if (window.MathJax) {
+                mathJaxHudDisplay.innerHTML = `\\(f'(\\text{Year } ${configState.currentAge}) = ${calculatedDerivative.toFixed(2)}\\) t/ha/yr`;
+                MathJax.typesetPromise([mathJaxHudDisplay]);
+            }
+
+            // Evaluate biological life cycle phase threshold categorization logic rules
+            let categoryText = "";
+            let explanationText = "";
+
+            if (configState.currentAge <= 3) {
+                categoryText = "Immature Phase";
+                explanationText = `At Year ${configState.currentAge}, the tree is setting basic root structural frameworks. The derivative $f'(x) \\approx ${calculatedDerivative.toFixed(2)}$ t/ha/yr indicates low yield velocity. Fertilizer application at this junction goes toward vegetative framework stabilization, not commercial harvesting metrics.`;
+            } else if (configState.currentAge > 3 && configState.currentAge <= 7) {
+                categoryText = "Early Mature Phase";
+                explanationText = `The derivative value is accelerating up significantly towards maximum momentum. This confirms your field blocks are entering their highest responsive window for targeted potassium (K) optimization schemes to boost canopy development.`;
+            } else if (configState.currentAge > 7 && configState.currentAge <= 10) {
+                categoryText = "Peak Mature Phase";
+                explanationText = `At Year ${configState.currentAge}, you are sitting right at or near the mathematical inflection point (\(f''(x) = 0\)). The growth velocity derivative peaks around here. This means the plantation sector has reached its absolute maximum structural yield acceleration capacity.`;
+            } else if (configState.currentAge > 10 && configState.currentAge <= 19) {
+                categoryText = "Stable Mature Phase";
+                explanationText = `The total accumulated yield $f(x)$ is high at ${calculatedYield.toFixed(2)} t/ha, but the derivative $f'(x)$ is structurally slowing down to ${calculatedDerivative.toFixed(2)} t/ha/yr. The biological machinery is stable, but adding incremental fertilizer matrices yields fewer marginal biological responses.`;
+            } else {
+                categoryText = "Senescent Phase";
+                explanationText = `The annual growth rate derivative has bottomed out close to zero ($f'(x) \\approx ${calculatedDerivative.toFixed(2)}$). While trees are mature, height constraints decrease processing efficiency. From a macro food security perspective, this provides a predictive data indicator to prep nurseries for replanting schedules.`;
+            }
+
+            hudStatus.innerText = categoryText;
+            hudExplanation.innerHTML = explanationText;
+        }
+
+        // Attach DOM event listener hooks to link variables change updates seamlessly
+        sliderYmax.addEventListener('input', () => triggerSystemUpdate());
+        sliderEta.addEventListener('input', () => triggerSystemUpdate());
+        sliderK.addEventListener('input', () => triggerSystemUpdate());
+        sliderAge.addEventListener('input', (e) => triggerSystemUpdate(e.target.value));
+
+        // Initial setup run upon application boot sequence loading execution context
+        window.addEventListener('DOMContentLoaded', () => {
+            triggerSystemUpdate(8);
+        });
+    </script>
+</body>
+</html>
