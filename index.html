@@ -3,81 +3,358 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculus in Malaysian Agriculture: Oil Palm Growth Rates</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Aquaculture Biomass Velocity Derivative Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans">
+<body class="bg-[#f8fafc] text-slate-800 font-sans antialiased min-h-screen p-4 md:p-6">
 
-    <div class="max-w-5xl mx-auto p-6 my-8 bg-white rounded-xl shadow-md border border-gray-100">
-        <header class="border-b border-gray-200 pb-4 mb-6">
-            <span class="text-xs font-semibold text-emerald-600 uppercase tracking-wider">SFM: Food Security & Bioscience Analytics</span>
-            <h1 class="text-3xl font-bold text-gray-900 mt-1">Application of Derivatives in Malaysian Palm Oil Yields</h1>
-            <p class="text-gray-600 mt-1">Analyzing Fresh Fruit Bunch (FFB) weight accumulation rates using calculus.</p>
-        </header>
-
-        <section class="mb-8 bg-emerald-50 p-5 rounded-lg border border-emerald-100">
-            <h2 class="text-xl font-bold text-emerald-900 mb-2">The Bioscience Problem</h2>
-            <p class="text-sm leading-relaxed text-emerald-950 mb-3">
-                In Malaysia, maximizing the efficiency of <em>Elaeis guineensis</em> (Oil Palm) is vital for national and global food security. A fresh fruit bunch takes about 20 to 22 weeks to mature after anthesis (flowering). Understanding the <strong>rate of change</strong> of bunch weight accumulation helps agronomists optimize fertilizer schedules and accurately predict harvest windows when oil content peaks.
-            </p>
-            <p class="text-xs text-emerald-800 italic">
-                <strong>Data Reference Note:</strong> Growth curve parameters are adapted from physiological models matching standard Malaysian Palm Oil Board (MPOB) agronomic yield data patterns (e.g., physiological studies featured in the <em>Journal of Oil Palm Research (JOPR)</em>).
-            </p>
-        </section>
-
-        <section class="grid md:grid-cols-2 gap-4 mb-8">
-            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <h3 class="text-sm font-semibold text-gray-700 mb-2">Growth Function $f(x)$</h3>
-                <p class="text-xs text-gray-600 mb-2">Models total bunch weight (kg) over time $x$ (weeks):</p>
-                <div class="text-center py-2 bg-white rounded border border-gray-100 font-mono text-sm">
-                    $$f(x) = \frac{25}{1 + e^{-0.4(x - 12)}}$$
-                </div>
-                <p class="text-[11px] text-gray-500 mt-2">Where 25kg is the typical maximum asymptotic bunch mass, and 12 weeks is the midpoint of fastest growth.</p>
-            </div>
-            
-            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <h3 class="text-sm font-semibold text-gray-700 mb-2">Derivative Function $f'(x)$ (Rate of Growth)</h3>
-                <p class="text-xs text-gray-600 mb-2">Calculates the exact velocity of weight gain (kg/week) at week $x$:</p>
-                <div class="text-center py-2 bg-white rounded border border-gray-100 font-mono text-sm">
-                    $$f'(x) = \frac{10 \cdot e^{-0.4(x - 12)}}{\left(1 + e^{-0.4(x - 12)}\right)^2}$$
-                </div>
-                <p class="text-[11px] text-gray-500 mt-2">Derived via the Chain Rule and Quotient Rule applied to the logistic growth model.</p>
-            </div>
-        </section>
-
-        <div class="mb-4 bg-blue-50 text-blue-800 text-xs px-4 py-2.5 rounded-md border border-blue-100 flex items-center gap-2">
-            <span class="flex h-2 w-2 rounded-full bg-blue-600 animate-pulse"></span>
-            <span><strong>Interactive Feature:</strong> Click anywhere directly on the chart line to calculate the exact rate of biomass change at that specific week.</span>
-        </div>
-
-        <div class="relative min-h-[300px] mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-            <canvas id="growthChart" class="w-full max-h-[400px]"></canvas>
-        </div>
-
-        <section id="analysisPanel" class="p-5 bg-slate-900 text-slate-100 rounded-lg shadow-inner transition-all duration-300">
-            <h3 class="text-md font-bold text-emerald-400 mb-3 flex items-center gap-2">
-                <span>📊</span> Calculus Analytics Result (Click on graph to update)
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center md:text-left">
-                <div class="border-b md:border-b-0 md:border-r border-slate-700 pb-3 md:pb-0 md:pr-4">
-                    <p class="text-xs uppercase tracking-wider text-slate-400">Selected Time Point</p>
-                    <p class="text-2xl font-mono font-bold text-white"><span id="outWeek">12.0</span> <span class="text-sm text-slate-400">weeks</span></p>
-                </div>
-                <div class="border-b md:border-b-0 md:border-r border-slate-700 pb-3 md:pb-0 md:pr-4">
-                    <p class="text-xs uppercase tracking-wider text-slate-400">Bunch Weight $f(x)$</p>
-                    <p class="text-2xl font-mono font-bold text-white"><span id="outWeight">12.50</span> <span class="text-sm text-slate-400">kg</span></p>
-                </div>
-                <div>
-                    <p class="text-xs uppercase tracking-wider text-slate-400">Growth Velocity $f'(x)$</p>
-                    <p class="text-2xl font-mono font-bold text-emerald-400"><span id="outDerivative">2.50</span> <span class="text-sm text-slate-400">kg/week</span></p>
-                </div>
-            </div>
-            <div class="mt-4 pt-4 border-t border-slate-800">
-                <p class="text-xs uppercase tracking-wider text-slate-400 mb-1">Layman's Agricultural Explanation:</p>
-                <p id="outExplanation" class="text-sm text-slate-300 italic leading-relaxed">
-                    At week 12.0, the fruit bunch is currently growing at its absolute peak velocity. It is accumulating 2.50 kg of mass per week. This marks the inflection point where the rate of cell expansion and initial oil accumulation changes from accelerating to decelerating.
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <header class="bg-[#0b5366] p-6 rounded-xl text-white shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <span class="bg-[#083e4d] text-cyan-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-cyan-700/50">
+                    SFH: AQUACULTURE HUSBANDRY TECHNOLOGY
+                </span>
+                <h1 class="text-3xl font-extrabold mt-2 tracking-tight">
+                    Aquaculture Biomass Velocity Derivative Simulator
+                </h1>
+                <p class="text-cyan-100/90 text-sm mt-1">
+                    Analyzing Cumulative Weight <span class="font-mono font-bold text-amber-300">f(x)</span> and Growth Rate Derivative <span class="font-mono font-bold text-cyan-300">f'(x)</span> in Malaysian RAS Systems
                 </p>
             </div>
+            <div class="bg-[#083e4d]/60 p-4 rounded-lg border border-cyan-700/30 text-left md:text-right min-w-[250px]">
+                <div class="flex items-center gap-2 justify-start md:justify-end text-xs text-cyan-300">
+                    <span class="h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                    Target Context:
+                </div>
+                <p class="text-white font-bold text-sm mt-1">DOF Malaysia & UPM Standards</p>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <div class="lg:col-span-4 bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                <div class="space-y-4">
+                    <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-2">
+                        <span>📖</span> The Bioscience Scenario
+                    </h2>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        In intensive finfish aquaculture production (e.g., genetically improved Red Tilapia strains), growth is non-linear and conforms to a sigmoidal (S-shaped) logistic curve. Understanding the instantaneous rate of change—the <strong class="text-slate-900">First Derivative \(f'(x)\)</strong>—is critical.
+                    </p>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        The derivative represents the <strong class="text-slate-900">daily average weight gain (grams/day)</strong>. In animal husbandry, identifying when the growth rate peaks is vital. Once the derivative peaks and begins to decline, the fish's <strong class="text-slate-900">Feed Conversion Ratio (FCR)</strong> decreases.
+                    </p>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Feeding the stock past this point increases production expenses rapidly, as commercial aquaculture feeds represent nearly <strong class="text-slate-900">60% to 70%</strong> of total operating costs in Malaysia.
+                    </p>
+                </div>
+            </div>
+
+            <div class="lg:col-span-8 bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                <div class="flex justify-between items-center mb-2">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <span class="h-2 w-2 rounded-full bg-cyan-500"></span> Live Growth Trajectory\(W_{max}\))</span>
+                            <span id="txtWmaxValue" class="text-indigo-600">600 g</span>
+                        </div>
+                        <input type="range" id="inputWmaxSlider" min="400" max="800" step="50" value="600" class="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                    </div>
+
+                    <div class="space-y-1 pt-2">
+                        <div class="flex justify-between text-xs font-mono font-bold">
+                            <span class="text-slate-600">Water Quality & Dissolved Oxygen Index (\(\eta\))</span>
+                            <span id="txtEtaValue" class="text-cyan-600">1.00</span>
+                        </div>
+                        <input type="range" id="inputEtaSlider" min="0.7" max="1.2" step="0.05" value="1.00" class="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-cyan-600">
+                        <div class="flex justify-between text-[10px] text-slate-400 font-mono pt-0.5">
+                            <span>Low Oxygen / Ammonia Stress</span>
+                            <span>Optimal Managed RAS Loop</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-7 bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                
+                <div class="space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-slate-100 border border-slate-200 text-slate-700 rounded-lg px-2.5 py-1.5 text-center">
+                                <span class="block text-[9px] font-mono uppercase font-black tracking-wider leading-none">Calculus</span>
+                                <span class="block text-sm font-bold mt-0.5 leading-none">HUD</span>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-slate-900 leading-tight">Dynamic Derivative Evaluator</h3>
+                                <p class="text-xs text-slate-400">Instantaneous bioscience performance metrics computed for Day <span id="txtDayLabel">60</span></p>
+                            </div>
+                        </div>
+                        <div class="bg-cyan-900 text-cyan-100 font-mono text-xs px-4 py-2.5 rounded-lg border border-cyan-950 shadow-sm" id="mathLiveEquationOutput">
+                            \(f'(\text{Day } 60) = 8.5 \ \text{g/day}\)
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/60">
+                            <p class="text-[10px] font-mono uppercase tracking-wider font-bold text-slate-400">Cumulative Weight \(F(x)\)</p>
+                            <p class="text-3xl font-bold font-mono text-slate-900 mt-1"><span id="metricWeight">280</span> <span class="text-xs text-slate-400 font-normal">g</span></p>
+                            <p class="text-[10px] text-indigo-600 font-semibold mt-1">Maximum exponential slope.</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/60">
+                            <p class="text-[10px] font-mono uppercase tracking-wider font-bold text-slate-400">Growth Speed \(F'(x)\)</p>
+                            <p class="text-3xl font-bold font-mono text-cyan-600 mt-1"><span id="metricSpeed">8.5</span> <span class="text-xs font-normal">g/day</span></p>
+                            <p id="metricSubText" class="text-[10px] text-cyan-600 font-semibold mt-1">Monitor oxygen in tank.</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/60">
+                            <p class="text-[10px]fontnt-mono uppercase tracking-wider font-bold text-slate-400">Husbandry Status</p>
+                            <p id="metricStatus" class="text-base font-extrabold text-amber-600 mt-2 truncate">Juvenile Phase</p>
+                            <p class="text-[10px] text-slate-400 mt-1">Transition feed types.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 mt-6 shadow-inner">
+                    <h4 class="text-xs font-bold text-cyan-800 uppercase tracking-wider flex items-center gap-1 mb-1.5">
+                        💡 Husbandry Insight & Action (Layman's Terms)
+                    </h4>
+                    <p id="txtLaymanExplanation" class="text-sm text-slate-600 italic leading-relaxed">
+                        Processing environmental metrics against aquaculture baseline configuration...
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <section class="bg-slate-900 text-slate-100 p-6 rounded-xl shadow-md space-y-4">
+            <h2 class="text-lg font-bold border-b border-slate-800 pb-2 text-cyan-400 tracking-wide">
+                Deep-Dive: How Calculus Solves Aquaculture Economics
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-slate-300">
+                <div class="space-y-1.5">
+                    <p class="font-bold text-white text-base"><span class="text-cyan-400">1</span> The Biological Peak</p>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        The peak of the derivative curve \(f'(x)\) occurs at the <strong class="text-slate-200">inflection point</strong> of the cumulative curve \(f(x)\). Mathematically, this is where the second derivative equals zero: \(f''(x) = 0\). Practically, this marks the maximum possible growth efficiency of the fish. After this day, the rate of weight accumulation slows down, and daily energy intake goes more toward body maintenance than tissue growth.
+                    </p>
+                </div>
+                <div class="space-y-1.5">
+                    <p class="font-bold text-white text-base"><span class="text-cyan-400">2</span> The Water Quality Equation</p>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        In tropical Malaysia, water temperatures hover near 30°C. In the simulator, the <strong class="text-slate-200">Water Quality index (\(\eta\))</strong> represents this structural microclimate parameter. In an under-aerated system (\(\eta \approx 0.75\)), fish suffer respiratory stress, slowing metabolic enzyme processes, shifting the inflection point to the right, and depressing the peak derivative value.
+                    </p>
+                </div>
+                <div class="space-y-1.5">
+                    <p class="font-bold text-white text-base"><span class="text-cyan-400">3</span> Deciding the Harvest Date</p>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Tilapia are usually harvested in Malaysia between days 90 and 120. By cross-referencing feed cost per day (which is linear-increasing) against cumulative weight value (which is sigmoidal), farmers use the derivative curve to locate the point where profit margins are maximized. Harvesting early targets specific local retail sizing, while day 120 caters to premium frozen processing.
+                    </p>
+                </div>
+            </div>
         </section>
+
+        <footer class="bg-white p-5 rounded-xl border border-slate-200 text-xs text-slate-500 shadow-sm space-y-3">
+            <p class="font-bold uppercase tracking-widest text-slate-400 text-[10px]">MALAYSIAN DATA & RESEARCH SOURCES REFERENCES</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
+                <div class="space-y-2">
+                    <p><span class="text-cyan-700 font-bold">✓ Department of Fisheries (DOF) Malaysia:</span> Freshwater fish farming performance data standards for closed high-density stocking infrastructure. <span class="text-slate-400 underline font-mono">dof.gov.my</span> - National Aquaculture Statistics & MyGAP Certification.</p>
+                    <p><span class="text-cyan-700 font-bold">✓ WorldFish Center Breeders Guidelines:</span> GIFT strain growth metrics adjusted for equatorial wetland climates and elevated water temperature basins. <span class="text-slate-400 underline font-mono">worldfishcenter.org</span> - Performance Tracking Reference Manuals.</p>
+                </div>
+                <div class="space-y-2">
+                    <p><span class="text-cyan-700 font-bold">✓ MARDI (Malaysian Agricultural Research and Development Institute):</span> Automated fish farming trial reports, implementing high-density water purification filtration kinetics. <span class="text-slate-400 underline font-mono">mardi.gov.my</span> - Aquaculture Research Portfolio.</p>
+                    <p><span class="text-cyan-700 font-bold">✓ Universiti Putra Malaysia (UPM) Institutional Repository:</span> Commercial organic pelleted feed protein retention trials and downstream logistics weight targets. <span class="text-slate-400 underline font-mono">upm.edu.my</span> - Industry Aquaculture Valuation Reports.</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        // Core constants matching lecturer's S-curve initialization blueprint
+        const BETA = 120;     
+        const K_CONST = 0.06; 
+
+        // DOM elements binding
+        const daySlider = document.getElementById('inputDaySlider');
+        const etaSlider = document.getElementById('inputEtaSlider');
+        const wmaxSlider = document.getElementById('inputWmaxSlider');
+        
+        const txtDayDisplay = document.getElementById('txtDayDisplay');
+        const txtDayLabel = document.getElementById('txtDayLabel');
+        const txtEtaValue = document.getElementById('txtEtaValue');
+        const txtWmaxValue = document.getElementById('txtWmaxValue');
+        
+        const metricWeight = document.getElementById('metricWeight');
+        const metricSpeed = document.getElementById('metricSpeed');
+        const metricSubText = document.getElementById('metricSubText');
+        const metricStatus = document.getElementById('metricStatus');
+        const txtLaymanExplanation = document.getElementById('txtLaymanExplanation');
+        const mathLiveEquationOutput = document.getElementById('mathLiveEquationOutput');
+
+        // S-Shape Logistics Function f(x)
+        function f(x, wmax, eta) {
+            return wmax / (1 + BETA * Math.exp(-K_CONST * eta * x));
+        }
+
+        // Exact Analytical First Derivative f'(x)
+        function f_prime(x, wmax, eta) {
+            const expTerm = Math.exp(-K_CONST * eta * x);
+            const numerator = wmax * BETA * (K_CONST * eta) * expTerm;
+            const denominator = Math.pow(1 + BETA * expTerm, 2);
+            return numerator / denominator;
+        }
+
+        let labels = [];
+        let weightPoints = [];
+        let speedPoints = [];
+
+        // Generates graph coordinates up to day 120
+        function generateDataArrays() {
+            labels = [];
+            weightPoints = [];
+            speedPoints = [];
+            const currentWmax = parseFloat(wmaxSlider.value);
+            const currentEta = parseFloat(etaSlider.value);
+            
+            for (let day = 0; day <= 120; day += 2) {
+                labels.push(day);
+                weightPoints.push(f(day, currentWmax, currentEta));
+                speedPoints.push(f_prime(day, currentWmax, currentEta));
+            }
+        }
+
+        generateDataArrays();
+
+        // Dual-axis Chart.js setup matching layout formatting
+        const ctxCanvas = document.getElementById('mainDashboardChart').getContext('2d');
+        const mainDashboardChart = new Chart(ctxCanvas, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Weight (g)',
+                        data:weightPoints,
+                        borderColor: '#4f46e5', 
+                        backgroundColor: 'transparent',
+                        borderWidth: 2.5,
+                        yAxisID: 'yLeft',
+                        tension: 0.1,
+                        pointRadius: 0,
+                        pointHoverRadius: 5
+                    },
+                    {
+                        label: 'Growth Rate (g/day)',
+                        data: speedPoints,
+                        borderColor: '#06b6d4', 
+                        backgroundColor: 'transparent',
+                        borderWidth: 2.5,
+                        yAxisID: 'yRight',
+                        tension: 0.1,
+                        pointRadius: 0,
+                        pointHoverRadius: 5
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Production Timeline (Days)', color: '#64748b', font: { weight: 'bold', size: 11 } },
+                        ticks: { color: '#64748b' },
+                        grid: { color: 'rgba(0, 0, 0, 0.02)' }
+                    },
+                    yLeft: {
+                        type: 'linear',
+                        position: 'left',
+                        title: { display: true, text: 'Weight f(x) (grams)', color: '#4f46e5', font: { weight: 'bold', size: 11 } },
+                        ticks: { color: '#64748b' },
+                        min: 0,
+                        max: 1000,
+                        grid: { color: 'rgba(0, 0, 0, 0.02)' }
+                    },
+                    yRight: {
+                        type: 'linear',
+                        position: 'right',
+                        title: { display: true, text: 'Daily Gain Velocity f\'(x) (g/day)', color: '#06b6d4', font: { weight: 'bold', size: 11 } },
+                        ticks: { color: '#64748b' },
+                        min: 0,
+                        max: 15,
+                        grid: { drawOnChartArea: false }
+                    }
+                },
+                onClick: (event, clickedElements) => {
+                    if (clickedElements && clickedElements.length > 0) {
+                        const index = clickedElements[0].index;
+                        daySlider.value = labels[index];
+                        syncCalculationsLoop();
+                    }
+                }
+            }
+        });
+
+        // Realtime calculation loop and context updating
+        function syncCalculationsLoop() {
+            const day = parseFloat(daySlider.value);
+            const eta = parseFloat(etaSlider.value);
+            const wmax = parseFloat(wmaxSlider.value);
+
+            txtDayDisplay.innerText = day;
+            txtDayLabel.innerText = day;
+            txtEtaValue.innerText = eta.toFixed(2);
+            txtWmaxValue.innerText = wmax + " g";
+
+            const wVal = f(day, wmax, eta);
+            const sVal = f_prime(day, wmax, eta);
+
+            metricWeight.innerText = Math.round(wVal);
+            metricSpeed.innerText = sVal.toFixed(1);
+
+            // Dynamic Equation Formatter via MathJax
+            if (window.MathJax) {
+                mathLiveEquationOutput.innerHTML = \\(f'(\\text{Day } ${day}) = ${sVal.toFixed(1)} \\ \\text{g/day}\\);
+                MathJax.typesetPromise([mathLiveEquationOutput]);
+            }
+
+            // Life cycle stage conditional formatting
+            if (day <= 30) {
+                metricStatus.innerText = "Nursery Fingerling Phase";
+                metricSubText.innerText = "Monitor biological filters.";
+                txtLaymanExplanation.innerText = `This is the slow start of the growth curve. The daily weight velocity is small at (${sVal.toFixed(1)}) g/day. Ensure accurate feeding frequencies using automated feeders; otherwise water quality will drop and stunt stock development.`;
+                metricStatus.className = "text-base font-extrabold text-blue-600 mt-2 truncate";
+                metricSubText.className = "text-[10px] text-blue-600 font-semibold mt-1";
+            } else if (day > 30 && day <= 80) {
+                metricStatus.innerText = "Juvenile Growth Phase";
+                metricSubText.innerText = "Peak growth velocity stretch.";
+                txtLaymanExplanation.innerText = This is the exponential stretch of the logistic curve. The daily growth speed derivative has shot up to (${sVal.toFixed(1)}) g/day. Ensure high oxygen aeration lines are active to facilitate metabolism; otherwise feeding levels drop instantly.;
+                metricStatus.className = "text-base font-extrabold text-amber-600 mt-2 truncate";
+                metricSubText.className = "text-[10px] text-amber-600 font-semibold mt-1";
+            } else {
+                metricStatus.innerText = "Finisher Satiation Phase";
+                metricSubText.innerText = "Transition processing parameters.";
+                txtLaymanExplanation.innerText = The growth velocity has passed its peak inflection point and drops to (${sVal.toFixed(1)}) g/day. Maintaining heavy baseline feed cycles during this deceleration phase creates structural feed waste. Scale down rations to maximize final FCR efficiency.;
+                metricStatus.className = "text-base font-extrabold text-rose-600 mt-2 truncate";
+                metricSubText.className = "text-[10px] text-rose-600 font-semibold mt-1";
+            }
+        }
+
+        // Event listeners handling live component changes
+        daySlider.addEventListener('input', syncCalculationsLoop);
+        
+        function runChartReconstruction() {
+            generateDataArrays();
+            mainDashboardChart.data.datasets[0].data = weightPoints;
+            mainDashboardChart.data.datasets[1].data = speedPoints;
+            mainDashboardChart.update('none');
+            syncCalculationsLoop();
+        }
+
+        etaSlider.addEventListener('input', runChartReconstruction);
+        wmaxSlider.addEventListener('input', runChartReconstruction);
+
+        // Initial launch configuration
+        syncCalculationsLoop();
+    </script>
+</body>
+</html>
